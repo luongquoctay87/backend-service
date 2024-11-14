@@ -16,6 +16,22 @@ services:
     networks:
       - default
 
+  postgres:
+    image: postgres
+    container_name: postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+      PGDATA: /data/postgres
+    volumes:
+      - postgres:/data/postgres
+      - ./initdb.sql:/docker-entrypoint-initdb.d/init.sql
+    ports:
+      - '5439:5432'
+    networks:
+      - default
+
   backend-service:
     container_name: backend-service
     build:
