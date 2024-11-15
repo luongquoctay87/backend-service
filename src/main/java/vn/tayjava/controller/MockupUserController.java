@@ -2,28 +2,22 @@ package vn.tayjava.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.validation.constraints.Min;
-import lombok.RequiredArgsConstructor;
-import org.apache.catalina.User;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import vn.tayjava.controller.request.UserCreationRequest;
 import vn.tayjava.controller.request.UserPasswordRequest;
 import vn.tayjava.controller.request.UserUpdateRequest;
 import vn.tayjava.controller.response.UserResponse;
-import vn.tayjava.service.UserService;
 
-import java.util.*;
+import java.util.Date;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
 @RestController
-@RequestMapping("/user")
-@Tag(name = "User Controller")
-@RequiredArgsConstructor
-public class UserController {
-
-    private final UserService userService;
+@RequestMapping("/mockup/user")
+@Tag(name = "Mockup User Controller")
+public class MockupUserController {
 
     @Operation(summary = "Get user list", description = "API retrieve user from database")
     @GetMapping("/list")
@@ -84,19 +78,20 @@ public class UserController {
 
     @Operation(summary = "Create User", description = "API add new user to database")
     @PostMapping("/add")
-    public ResponseEntity<Object> createUser(@RequestBody UserCreationRequest request) {
+    public Map<String, Object> createUser(UserCreationRequest request) {
 
         Map<String, Object> result = new LinkedHashMap<>();
         result.put("status", HttpStatus.CREATED.value());
         result.put("message", "User created successfully");
-        result.put("data", userService.save(request));
+        result.put("data", 3);
 
-        return new ResponseEntity<>(result, HttpStatus.CREATED);
+        return result;
     }
 
     @Operation(summary = "Update User", description = "API update user to database")
     @PutMapping("/upd")
-    public Map<String, Object> updateUser(@RequestBody UserUpdateRequest request) {
+    public Map<String, Object> updateUser(UserUpdateRequest request) {
+
         Map<String, Object> result = new LinkedHashMap<>();
         result.put("status", HttpStatus.ACCEPTED.value());
         result.put("message", "User updated successfully");
@@ -107,7 +102,7 @@ public class UserController {
 
     @Operation(summary = "Change Password", description = "API change password for user to database")
     @PatchMapping("/change-pwd")
-    public Map<String, Object> changePassword(@RequestBody UserPasswordRequest request) {
+    public Map<String, Object> changePassword(UserPasswordRequest request) {
 
         Map<String, Object> result = new LinkedHashMap<>();
         result.put("status", HttpStatus.NO_CONTENT.value());

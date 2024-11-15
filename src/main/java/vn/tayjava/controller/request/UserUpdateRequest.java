@@ -4,6 +4,7 @@ import lombok.Getter;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 
 @Getter
 public class UserUpdateRequest implements Serializable {
@@ -15,4 +16,5 @@ public class UserUpdateRequest implements Serializable {
     private String username;
     private String email;
     private String phone;
+    private List<AddressRequest> addresses;
 }
