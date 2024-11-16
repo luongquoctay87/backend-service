@@ -26,7 +26,7 @@ public class MockupUserController {
                                       @RequestParam(defaultValue = "20") int size) {
         UserResponse userResponse1 = new UserResponse();
         userResponse1.setId(1l);
-        userResponse1.setFistName("Tay");
+        userResponse1.setFirstName("Tay");
         userResponse1.setLastName("Java");
         userResponse1.setGender("");
         userResponse1.setBirthday(new Date());
@@ -36,7 +36,7 @@ public class MockupUserController {
 
         UserResponse userResponse2 = new UserResponse();
         userResponse2.setId(2l);
-        userResponse2.setFistName("Leo");
+        userResponse2.setFirstName("Leo");
         userResponse2.setLastName("Messi");
         userResponse2.setGender("");
         userResponse2.setBirthday(new Date());
@@ -60,7 +60,7 @@ public class MockupUserController {
 
         UserResponse userDetail = new UserResponse();
         userDetail.setId(userId);
-        userDetail.setFistName("Tay");
+        userDetail.setFirstName("Tay");
         userDetail.setLastName("Java");
         userDetail.setGender("");
         userDetail.setBirthday(new Date());

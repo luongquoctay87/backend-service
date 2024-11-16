@@ -10,7 +10,7 @@ import java.util.Date;
 @Setter
 public class UserResponse implements Serializable {
     private Long id;
-    private String fistName;
+    private String firstName;
     private String lastName;
     private String gender;
     private Date birthday;

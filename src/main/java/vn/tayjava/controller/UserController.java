@@ -4,6 +4,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.constraints.Min;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.catalina.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -20,6 +21,7 @@ import java.util.*;
 @RestController
 @RequestMapping("/user")
 @Tag(name = "User Controller")
+@Slf4j(topic = "USER-CONTROLLER")
 @RequiredArgsConstructor
 public class UserController {
 
@@ -28,11 +30,11 @@ public class UserController {
     @Operation(summary = "Get user list", description = "API retrieve user from database")
     @GetMapping("/list")
     public Map<String, Object> getList(@RequestParam(required = false) String keyword,
-                                      @RequestParam(defaultValue = "0") int page,
-                                      @RequestParam(defaultValue = "20") int size) {
+                                       @RequestParam(defaultValue = "0") int page,
+                                       @RequestParam(defaultValue = "20") int size) {
         UserResponse userResponse1 = new UserResponse();
         userResponse1.setId(1l);
-        userResponse1.setFistName("Tay");
+        userResponse1.setFirstName("Tay");
         userResponse1.setLastName("Java");
         userResponse1.setGender("");
         userResponse1.setBirthday(new Date());
@@ -42,7 +44,7 @@ public class UserController {
 
         UserResponse userResponse2 = new UserResponse();
         userResponse2.setId(2l);
-        userResponse2.setFistName("Leo");
+        userResponse2.setFirstName("Leo");
         userResponse2.setLastName("Messi");
         userResponse2.setGender("");
         userResponse2.setBirthday(new Date());
@@ -66,7 +68,7 @@ public class UserController {
 
         UserResponse userDetail = new UserResponse();
         userDetail.setId(userId);
-        userDetail.setFistName("Tay");
+        userDetail.setFirstName("Tay");
         userDetail.setLastName("Java");
         userDetail.setGender("");
         userDetail.setBirthday(new Date());
@@ -97,6 +99,10 @@ public class UserController {
     @Operation(summary = "Update User", description = "API update user to database")
     @PutMapping("/upd")
     public Map<String, Object> updateUser(@RequestBody UserUpdateRequest request) {
+        log.info("Updating user: {}", request);
+
+        userService.update(request);
+
         Map<String, Object> result = new LinkedHashMap<>();
         result.put("status", HttpStatus.ACCEPTED.value());
         result.put("message", "User updated successfully");
@@ -108,6 +114,9 @@ public class UserController {
     @Operation(summary = "Change Password", description = "API change password for user to database")
     @PatchMapping("/change-pwd")
     public Map<String, Object> changePassword(@RequestBody UserPasswordRequest request) {
+        log.info("Changing password for user: {}", request);
+
+        userService.changePassword(request);
 
         Map<String, Object> result = new LinkedHashMap<>();
         result.put("status", HttpStatus.NO_CONTENT.value());
@@ -120,6 +129,9 @@ public class UserController {
     @Operation(summary = "Delete user", description = "API activate user from database")
     @DeleteMapping("/del/{userId}")
     public Map<String, Object> deleteUser(@PathVariable Long userId) {
+        log.info("Deleting user: {}", userId);
+
+        userService.delete(userId);
 
         Map<String, Object> result = new LinkedHashMap<>();
         result.put("status", HttpStatus.RESET_CONTENT.value());
