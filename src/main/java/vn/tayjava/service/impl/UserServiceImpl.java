@@ -16,6 +16,7 @@ import vn.tayjava.controller.request.UserPasswordRequest;
 import vn.tayjava.controller.request.UserUpdateRequest;
 import vn.tayjava.controller.response.UserPageResponse;
 import vn.tayjava.controller.response.UserResponse;
+import vn.tayjava.exception.InvalidDataException;
 import vn.tayjava.exception.ResourceNotFoundException;
 import vn.tayjava.model.AddressEntity;
 import vn.tayjava.model.UserEntity;
@@ -109,6 +110,12 @@ public class UserServiceImpl implements UserService {
     @Transactional(rollbackFor = Exception.class)
     public long save(UserCreationRequest req) {
         log.info("Saving user: {}", req);
+
+        UserEntity userByEmail = userRepository.findByEmail(req.getEmail());
+        if (userByEmail != null) {
+            throw new InvalidDataException("Email already exists");
+        }
+
         UserEntity user = new UserEntity();
         user.setFirstName(req.getFirstName());
         user.setLastName(req.getLastName());
@@ -119,6 +126,7 @@ public class UserServiceImpl implements UserService {
         user.setUsername(req.getUsername());
         user.setType(req.getType());
         user.setStatus(UserStatus.NONE);
+
         userRepository.save(user);
         log.info("Saved user: {}", user);
 
