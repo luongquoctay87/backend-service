@@ -15,8 +15,6 @@ spring:
     show-sql: true
     hibernate:
       ddl-auto: none
-  sendGrid:
-    apiKey: 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
 
 # application-dev.yml
 springdoc:
