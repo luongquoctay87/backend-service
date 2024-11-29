@@ -17,6 +17,7 @@ spring:
       ddl-auto: none
   sendGrid:
     apiKey: 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
+    fromEmail: quoctay87@gmail.com
 
 # application-dev.yml
 springdoc:
