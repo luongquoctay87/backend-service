@@ -18,6 +18,8 @@ spring:
   sendGrid:
     apiKey: ${SENDGRID_API_KEY}
     fromEmail: quoctay87@gmail.com
+    templateId: d-2116466afd0a438b90615184dd569e42
+    verificationLink: http://localhost:8080/user/confirm-email
 
 # application-dev.yml
 springdoc:

@@ -2,6 +2,7 @@ package vn.tayjava.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
 import lombok.RequiredArgsConstructor;
@@ -10,15 +11,15 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import vn.tayjava.common.Gender;
 import vn.tayjava.controller.request.UserCreationRequest;
 import vn.tayjava.controller.request.UserPasswordRequest;
 import vn.tayjava.controller.request.UserUpdateRequest;
-import vn.tayjava.controller.response.UserPageResponse;
 import vn.tayjava.controller.response.UserResponse;
 import vn.tayjava.service.UserService;
 
-import java.util.*;
+import java.io.IOException;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/user")
@@ -102,6 +103,20 @@ public class UserController {
         result.put("data", "");
 
         return result;
+    }
+
+    @Operation(summary = "Confirm Email", description = "Confirm email for account")
+    @GetMapping("/confirm-email")
+    public void confirmEmail(@RequestParam String secretCode, HttpServletResponse response) throws IOException {
+        log.info("Confirm email for account with secretCode: {}", secretCode);
+
+        try {
+            // TODO check or compare secret code from db
+        } catch (Exception e) {
+            log.error("Verification fail", e.getMessage(), e);
+        } finally {
+            response.sendRedirect("https://tayjava.vn/wp-admin/");
+        }
     }
 
     @Operation(summary = "Delete user", description = "API activate user from database")
