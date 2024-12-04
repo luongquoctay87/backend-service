@@ -52,6 +52,7 @@ public class CustomizeRequestFilter extends OncePerRequestFilter {
                 log.info(e.getMessage());
                 response.setStatus(HttpServletResponse.SC_OK);
                 response.getWriter().write(errorResponse(e.getMessage()));
+                return;
             }
 
             UserDetails user = serviceDetail.userDetailsService().loadUserByUsername(username);
@@ -77,7 +78,8 @@ public class CustomizeRequestFilter extends OncePerRequestFilter {
         try {
             ErrorResponse error = new ErrorResponse();
             error.setTimestamp(new Date());
-            error.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            error.setError("Forbidden");
+            error.setStatus(HttpServletResponse.SC_FORBIDDEN);
             error.setMessage(message);
 
             Gson gson = new GsonBuilder().setPrettyPrinting().create();
@@ -92,6 +94,7 @@ public class CustomizeRequestFilter extends OncePerRequestFilter {
     private class ErrorResponse {
         private Date timestamp;
         private int status;
+        private String error;
         private String message;
     }
 }
