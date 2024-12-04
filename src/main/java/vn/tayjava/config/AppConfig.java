@@ -1,6 +1,5 @@
 package vn.tayjava.config;
 
-import com.google.gson.Gson;
 import com.sendgrid.SendGrid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -88,8 +87,4 @@ public class AppConfig {
         return new SendGrid(apiKey);
     }
 
-    @Bean
-    public Gson gson() {
-        return new Gson();
-    }
 }
