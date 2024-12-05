@@ -3,7 +3,6 @@ package vn.tayjava.controller.request;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
-import lombok.Setter;
 import lombok.ToString;
 import vn.tayjava.common.Gender;
 import vn.tayjava.common.UserType;

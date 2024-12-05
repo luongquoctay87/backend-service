@@ -3,31 +3,28 @@ package vn.tayjava.model;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.extern.slf4j.Slf4j;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.annotations.UpdateTimestamp;
 import org.hibernate.type.SqlTypes;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import vn.tayjava.common.Gender;
 import vn.tayjava.common.UserStatus;
 import vn.tayjava.common.UserType;
 
 import java.io.Serializable;
-import java.util.Collection;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Getter
 @Setter
 @Entity
 @Table(name = "tbl_user")
-public class UserEntity implements UserDetails, Serializable {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
-    private Long id;
+@Slf4j(topic = "UserEntity")
+public class UserEntity extends AbstractEntity<Long> implements UserDetails, Serializable {
 
     @Column(name = "first_name", length = 255)
     private String firstName;
@@ -66,19 +63,23 @@ public class UserEntity implements UserDetails, Serializable {
     @Column(name = "status", length = 255)
     private UserStatus status;
 
-    @Column(name = "created_at", length = 255)
-    @Temporal(TemporalType.TIMESTAMP)
-    @CreationTimestamp
-    private Date createdAt;
+    @OneToMany(mappedBy = "user", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    private Set<UserHasRole> roles = new HashSet<>();
 
-    @Column(name = "updated_at", length = 255)
-    @Temporal(TemporalType.TIMESTAMP)
-    @UpdateTimestamp
-    private Date updatedAt;
+    @OneToMany(mappedBy = "user")
+    private Set<GroupHasUser> groups = new HashSet<>();
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of();
+
+        // Get roles by user_id
+        List<Role> roleList = roles.stream().map(UserHasRole::getRole).toList();
+
+        // Get role name
+        List<String> roleNames = roleList.stream().map(Role::getName).toList();
+        log.info("User roles: {}", roleNames);
+
+        return roleNames.stream().map(SimpleGrantedAuthority::new).toList();
     }
 
     @Override

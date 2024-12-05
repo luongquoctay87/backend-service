@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import vn.tayjava.controller.request.UserCreationRequest;
@@ -64,6 +65,7 @@ public class UserController {
 
     @Operation(summary = "Create User", description = "API add new user to database")
     @PostMapping("/add")
+    @PreAuthorize("hasAnyAuthority('admin', 'manager')")
     public ResponseEntity<Object> createUser(@RequestBody @Valid UserCreationRequest request) {
         log.info("Create User: {}", request);
 
@@ -121,6 +123,7 @@ public class UserController {
 
     @Operation(summary = "Delete user", description = "API activate user from database")
     @DeleteMapping("/del/{userId}")
+    @PreAuthorize("hasAuthority('admin')")
     public Map<String, Object> deleteUser(@PathVariable @Min(value = 1, message = "userId must be equals or greater than 1") Long userId) {
         log.info("Deleting user: {}", userId);
 
