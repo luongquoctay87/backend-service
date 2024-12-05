@@ -83,6 +83,42 @@ public class GlobalException {
      * @param request
      * @return
      */
+    @ExceptionHandler(InternalAuthenticationServiceException.class)
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "401", description = "Unauthorized",
+                    content = {@Content(mediaType = APPLICATION_JSON_VALUE,
+                            examples = @ExampleObject(
+                                    name = "401 Response",
+                                    summary = "Handle exception when user not authenticated",
+                                    value = """
+                                            {
+                                              "timestamp": "2023-10-19T06:07:35.321+00:00",
+                                              "status": 401,
+                                              "path": "/api/v1/...",
+                                              "error": "Unauthorized",
+                                              "message": "Username or password is incorrect"
+                                            }
+                                            """
+                            ))})
+    })
+    public ErrorResponse handleInternalAuthenticationServiceException(InternalAuthenticationServiceException e, WebRequest request) {
+        ErrorResponse errorResponse = new ErrorResponse();
+        errorResponse.setTimestamp(new Date());
+        errorResponse.setPath(request.getDescription(false).replace("uri=", ""));
+        errorResponse.setStatus(UNAUTHORIZED.value());
+        errorResponse.setError(UNAUTHORIZED.getReasonPhrase());
+        errorResponse.setMessage("Username or password is incorrect");
+
+        return errorResponse;
+    }
+
+    /**
+     * Handle exception when the request not found data
+     *
+     * @param e
+     * @param request
+     * @return
+     */
     @ExceptionHandler({ForBiddenException.class, AccessDeniedException.class})
     @ApiResponses(value = {
             @ApiResponse(responseCode = "403", description = "Forbidden",
@@ -119,9 +155,9 @@ public class GlobalException {
      * @param request
      * @return
      */
-    @ExceptionHandler({ResourceNotFoundException.class, InternalAuthenticationServiceException.class})
+    @ExceptionHandler(ResourceNotFoundException.class)
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "404", description = "Bad Request",
+            @ApiResponse(responseCode = "404", description = "Not Found",
                     content = {@Content(mediaType = APPLICATION_JSON_VALUE,
                             examples = @ExampleObject(
                                     name = "404 Response",
@@ -137,17 +173,13 @@ public class GlobalException {
                                             """
                             ))})
     })
-    public ErrorResponse handleResourceNotFoundException(Exception e, WebRequest request) {
+    public ErrorResponse handleResourceNotFoundException(ResourceNotFoundException e, WebRequest request) {
         ErrorResponse errorResponse = new ErrorResponse();
         errorResponse.setTimestamp(new Date());
         errorResponse.setPath(request.getDescription(false).replace("uri=", ""));
         errorResponse.setStatus(NOT_FOUND.value());
         errorResponse.setError(NOT_FOUND.getReasonPhrase());
-        if (e instanceof InternalAuthenticationServiceException) {
-            errorResponse.setMessage("Username or password is incorrect");
-        } else {
-            errorResponse.setMessage(e.getMessage());
-        }
+        errorResponse.setMessage(e.getMessage());
 
         return errorResponse;
     }
