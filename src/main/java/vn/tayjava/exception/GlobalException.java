@@ -8,6 +8,8 @@ import jakarta.validation.ConstraintViolationException;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.authentication.InternalAuthenticationServiceException;
+import org.springframework.web.ErrorResponse;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -121,7 +123,7 @@ public class GlobalException {
      * @param request
      * @return
      */
-    @ExceptionHandler(ResourceNotFoundException.class)
+    @ExceptionHandler({ResourceNotFoundException.class, InternalAuthenticationServiceException.class})
     @ResponseStatus(NOT_FOUND)
     @ApiResponses(value = {
             @ApiResponse(responseCode = "404", description = "Bad Request",
@@ -140,13 +142,17 @@ public class GlobalException {
                                             """
                             ))})
     })
-    public ErrorResponse handleResourceNotFoundException(ResourceNotFoundException e, WebRequest request) {
+    public ErrorResponse handleResourceNotFoundException(Exception e, WebRequest request) {
         ErrorResponse errorResponse = new ErrorResponse();
         errorResponse.setTimestamp(new Date());
         errorResponse.setPath(request.getDescription(false).replace("uri=", ""));
         errorResponse.setStatus(NOT_FOUND.value());
         errorResponse.setError(NOT_FOUND.getReasonPhrase());
-        errorResponse.setMessage(e.getMessage());
+        if (e instanceof InternalAuthenticationServiceException) {
+            errorResponse.setMessage("Username or password is incorrect");
+        } else {
+            errorResponse.setMessage(e.getMessage());
+        }
 
         return errorResponse;
     }
