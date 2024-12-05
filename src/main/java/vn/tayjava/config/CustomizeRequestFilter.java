@@ -43,7 +43,7 @@ public class CustomizeRequestFilter extends OncePerRequestFilter {
         final String authHeader = request.getHeader(AUTHORIZATION);
         if (StringUtils.hasLength(authHeader) && authHeader.startsWith("Bearer ")) {
             String token = authHeader.substring(7);
-            log.info("token: {}...", token.substring(0, 20));
+            log.info("token: {}...", token.substring(0, 15));
             String username = "";
             try {
                 username = jwtService.extractUsername(token, TokenType.ACCESS_TOKEN);

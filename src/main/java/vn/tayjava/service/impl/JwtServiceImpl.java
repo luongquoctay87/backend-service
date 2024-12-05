@@ -110,7 +110,7 @@ public class JwtServiceImpl implements JwtService {
     }
 
     private Claims extraAllClaim(String token, TokenType type) {
-        log.info("Extract all claims for token {}...", token);
+        log.info("Extract all claims for token {}...", token.substring(0, 15));
         try {
             return Jwts.parserBuilder().setSigningKey(getKey(type)).build().parseClaimsJws(token).getBody();
         } catch (SignatureException | ExpiredJwtException e) { // Invalid signature or expired token
