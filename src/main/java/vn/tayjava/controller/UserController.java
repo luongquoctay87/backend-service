@@ -119,7 +119,7 @@ public class UserController {
         try {
             // TODO check or compare secret code from db
         } catch (Exception e) {
-            log.error("Verification fail", e.getMessage(), e);
+            log.error("Verification fail, message={}", e.getMessage(), e);
         } finally {
             response.sendRedirect("https://tayjava.vn/wp-admin/");
         }

@@ -7,6 +7,9 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.validation.ConstraintViolationException;
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.authentication.InternalAuthenticationServiceException;
+import org.springframework.web.ErrorResponse;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -31,7 +34,6 @@ public class GlobalException {
      */
     @ExceptionHandler({ConstraintViolationException.class,
             MissingServletRequestParameterException.class, MethodArgumentNotValidException.class})
-    @ResponseStatus(BAD_REQUEST)
     @ApiResponses(value = {
             @ApiResponse(responseCode = "400", description = "Bad Request",
                     content = {@Content(mediaType = APPLICATION_JSON_VALUE,
@@ -77,14 +79,49 @@ public class GlobalException {
     }
 
     /**
+     * Handle exception when user not authenticated
+     *
+     * @param e
+     * @param request
+     * @return
+     */
+    @ExceptionHandler(InternalAuthenticationServiceException.class)
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "401", description = "Unauthorized",
+                    content = {@Content(mediaType = APPLICATION_JSON_VALUE,
+                            examples = @ExampleObject(
+                                    name = "401 Response",
+                                    summary = "Handle exception when resource not found",
+                                    value = """
+                                            {
+                                              "timestamp": "2023-10-19T06:07:35.321+00:00",
+                                              "status": 401,
+                                              "path": "/api/v1/...",
+                                              "error": "Unauthorized",
+                                              "message": "Username or password is incorrect"
+                                            }
+                                            """
+                            ))})
+    })
+    public ErrorResponse handleInternalAuthenticationServiceException(InternalAuthenticationServiceException e, WebRequest request) {
+        ErrorResponse errorResponse = new ErrorResponse();
+        errorResponse.setTimestamp(new Date());
+        errorResponse.setPath(request.getDescription(false).replace("uri=", ""));
+        errorResponse.setStatus(UNAUTHORIZED.value());
+        errorResponse.setError(UNAUTHORIZED.getReasonPhrase());
+        errorResponse.setMessage("Username or password is incorrect");
+
+        return errorResponse;
+    }
+
+    /**
      * Handle exception when the request not found data
      *
      * @param e
      * @param request
      * @return
      */
-    @ExceptionHandler(ForBiddenException.class)
-    @ResponseStatus(FORBIDDEN)
+    @ExceptionHandler({ForBiddenException.class, AccessDeniedException.class})
     @ApiResponses(value = {
             @ApiResponse(responseCode = "403", description = "Forbidden",
                     content = {@Content(mediaType = APPLICATION_JSON_VALUE,
@@ -102,7 +139,7 @@ public class GlobalException {
                                             """
                             ))})
     })
-    public ErrorResponse handleForBiddenException(ForBiddenException e, WebRequest request) {
+    public ErrorResponse handleAccessDeniedException(Exception e, WebRequest request) {
         ErrorResponse errorResponse = new ErrorResponse();
         errorResponse.setTimestamp(new Date());
         errorResponse.setPath(request.getDescription(false).replace("uri=", ""));
@@ -121,9 +158,8 @@ public class GlobalException {
      * @return
      */
     @ExceptionHandler(ResourceNotFoundException.class)
-    @ResponseStatus(NOT_FOUND)
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "404", description = "Bad Request",
+            @ApiResponse(responseCode = "404", description = "Not Found",
                     content = {@Content(mediaType = APPLICATION_JSON_VALUE,
                             examples = @ExampleObject(
                                     name = "404 Response",
@@ -158,7 +194,6 @@ public class GlobalException {
      * @return
      */
     @ExceptionHandler(InvalidDataException.class)
-    @ResponseStatus(CONFLICT)
     @ApiResponses(value = {
             @ApiResponse(responseCode = "409", description = "Conflict",
                     content = {@Content(mediaType = APPLICATION_JSON_VALUE,
@@ -195,7 +230,6 @@ public class GlobalException {
      * @return error
      */
     @ExceptionHandler(Exception.class)
-    @ResponseStatus(INTERNAL_SERVER_ERROR)
     @ApiResponses(value = {
             @ApiResponse(responseCode = "500", description = "Internal Server Error",
                     content = {@Content(mediaType = APPLICATION_JSON_VALUE,
