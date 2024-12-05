@@ -8,6 +8,7 @@ import vn.tayjava.common.Gender;
 import vn.tayjava.controller.request.UserCreationRequest;
 import vn.tayjava.controller.request.UserPasswordRequest;
 import vn.tayjava.controller.request.UserUpdateRequest;
+import vn.tayjava.controller.response.UserPageResponse;
 import vn.tayjava.controller.response.UserResponse;
 
 import java.util.Date;
@@ -47,10 +48,17 @@ public class MockupUserController {
 
         List<UserResponse> userList = List.of(userResponse1, userResponse2);
 
+        UserPageResponse userPageResponse = new UserPageResponse();
+        userPageResponse.setPageNumber(page);
+        userPageResponse.setPageSize(size);
+        userPageResponse.setTotalPages(1);
+        userPageResponse.setTotalElements(2);
+        userPageResponse.setUsers(userList);
+
         Map<String, Object> result = new LinkedHashMap<>();
         result.put("status", HttpStatus.OK.value());
         result.put("message", "user list");
-        result.put("data", userList);
+        result.put("data", userPageResponse);
 
         return result;
     }
@@ -59,20 +67,20 @@ public class MockupUserController {
     @GetMapping("/{userId}")
     public Map<String, Object> getUserDetail(@PathVariable Long userId) {
 
-        UserResponse userDetail = new UserResponse();
-        userDetail.setId(userId);
-        userDetail.setFirstName("Tay");
-        userDetail.setLastName("Java");
-        userDetail.setGender(Gender.MALE);
-        userDetail.setBirthday(new Date());
-        userDetail.setUsername("admin");
-        userDetail.setEmail("admin@gmail.com");
-        userDetail.setPhone("0975118228");
+        UserResponse userResponse = new UserResponse();
+        userResponse.setId(userId);
+        userResponse.setFirstName("Tay");
+        userResponse.setLastName("Java");
+        userResponse.setGender(Gender.MALE);
+        userResponse.setBirthday(new Date());
+        userResponse.setUsername("admin");
+        userResponse.setEmail("admin@gmail.com");
+        userResponse.setPhone("0975118228");
 
         Map<String, Object> result = new LinkedHashMap<>();
         result.put("status", HttpStatus.OK.value());
         result.put("message", "user");
-        result.put("data", userDetail);
+        result.put("data", userResponse);
 
         return result;
     }
@@ -84,7 +92,7 @@ public class MockupUserController {
         Map<String, Object> result = new LinkedHashMap<>();
         result.put("status", HttpStatus.CREATED.value());
         result.put("message", "User created successfully");
-        result.put("data", 3);
+        result.put("data", 1);
 
         return result;
     }
