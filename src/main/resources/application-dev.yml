@@ -4,17 +4,6 @@ spring:
       on-profile: dev
   devtools:
     add-properties: true
-  datasource:
-    url: jdbc:postgresql://localhost:5432/postgres
-    username: quoctay
-    password: password
-  jpa:
-    properties:
-      hibernate:
-        dialect: org.hibernate.dialect.PostgreSQLDialect
-    show-sql: true
-    hibernate:
-      ddl-auto: none
 
 # application-dev.yml
 springdoc:
