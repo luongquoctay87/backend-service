@@ -7,6 +7,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.validation.ConstraintViolationException;
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -83,7 +84,7 @@ public class GlobalException {
      * @param request
      * @return
      */
-    @ExceptionHandler(ForBiddenException.class)
+    @ExceptionHandler({ForBiddenException.class, AccessDeniedException.class})
     @ResponseStatus(FORBIDDEN)
     @ApiResponses(value = {
             @ApiResponse(responseCode = "403", description = "Forbidden",
@@ -102,7 +103,7 @@ public class GlobalException {
                                             """
                             ))})
     })
-    public ErrorResponse handleForBiddenException(ForBiddenException e, WebRequest request) {
+    public ErrorResponse handleAccessDeniedException(Exception e, WebRequest request) {
         ErrorResponse errorResponse = new ErrorResponse();
         errorResponse.setTimestamp(new Date());
         errorResponse.setPath(request.getDescription(false).replace("uri=", ""));
