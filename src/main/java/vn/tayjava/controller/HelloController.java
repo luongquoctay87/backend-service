@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 @Tag(name = "Hello Controller")
 public class HelloController {
 
-    @Operation(summary = "Test API", description = "Mo tar chi tiet")
+    @Operation(summary = "Test API", description = "Mo tả chi tiết về API")
     @GetMapping("/hello")
     public String greeting(@RequestParam String name) {
         return "Hello, " + name;
