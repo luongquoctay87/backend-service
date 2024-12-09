@@ -52,37 +52,37 @@ public class UserServiceTest {
     private @Mock PasswordEncoder passwordEncoder;
     private @Mock EmailService emailService;
 
-    private static UserEntity mockUser1;
-    private static UserEntity mockUser2;
+    private static UserEntity tayJava;
+    private static UserEntity johnDoe;
 
     @BeforeAll
     public static void beforeAll() {
         // Dữ liệu giả lập
-        mockUser1 = new UserEntity();
-        mockUser1.setId(1L);
-        mockUser1.setFirstName("Tay");
-        mockUser1.setLastName("Java");
-        mockUser1.setGender(Gender.MALE);
-        mockUser1.setBirthday(new Date());
-        mockUser1.setEmail("quoctay87@gmail.com");
-        mockUser1.setPhone("0975118228");
-        mockUser1.setUsername("tayjava");
-        mockUser1.setPassword("password");
-        mockUser1.setType(UserType.USER);
-        mockUser1.setStatus(UserStatus.ACTIVE);
+        tayJava = new UserEntity();
+        tayJava.setId(1L);
+        tayJava.setFirstName("Tay");
+        tayJava.setLastName("Java");
+        tayJava.setGender(Gender.MALE);
+        tayJava.setBirthday(new Date());
+        tayJava.setEmail("quoctay87@gmail.com");
+        tayJava.setPhone("0975118228");
+        tayJava.setUsername("tayjava");
+        tayJava.setPassword("password");
+        tayJava.setType(UserType.USER);
+        tayJava.setStatus(UserStatus.ACTIVE);
 
-        mockUser2 = new UserEntity();
-        mockUser2.setId(2L);
-        mockUser2.setFirstName("John");
-        mockUser2.setLastName("Doe");
-        mockUser2.setGender(Gender.FEMALE);
-        mockUser2.setBirthday(new Date());
-        mockUser2.setEmail("johndoe@gmail.com");
-        mockUser2.setPhone("0123456789");
-        mockUser2.setUsername("johndoe");
-        mockUser2.setPassword("password");
-        mockUser2.setType(UserType.USER);
-        mockUser2.setStatus(UserStatus.INACTIVE);
+        johnDoe = new UserEntity();
+        johnDoe.setId(2L);
+        johnDoe.setFirstName("John");
+        johnDoe.setLastName("Doe");
+        johnDoe.setGender(Gender.FEMALE);
+        johnDoe.setBirthday(new Date());
+        johnDoe.setEmail("johndoe@gmail.com");
+        johnDoe.setPhone("0123456789");
+        johnDoe.setUsername("johndoe");
+        johnDoe.setPassword("password");
+        johnDoe.setType(UserType.USER);
+        johnDoe.setStatus(UserStatus.INACTIVE);
     }
 
     @BeforeEach
@@ -93,7 +93,7 @@ public class UserServiceTest {
 
     @Test
     public void testGetUserList_Success() {
-        Page<UserEntity> userPage = new PageImpl<>(List.of(mockUser1, mockUser2));
+        Page<UserEntity> userPage = new PageImpl<>(List.of(tayJava, johnDoe));
         when(userRepository.findAll(any(Pageable.class))).thenReturn(userPage);
 
         UserPageResponse result = userService.findAll(null, null, 0, 20);
@@ -104,7 +104,7 @@ public class UserServiceTest {
 
     @Test
     public void testSearchUser_Success() {
-        Page<UserEntity> userPage = new PageImpl<>(List.of(mockUser1, mockUser2));
+        Page<UserEntity> userPage = new PageImpl<>(List.of(tayJava, johnDoe));
 
         // Giả lập phương thức search của UserRepository
         when(userRepository.searchByKeyword(any(), any(Pageable.class))).thenReturn(userPage);
@@ -129,7 +129,7 @@ public class UserServiceTest {
 
     @Test
     public void testGetUserById_Success() {
-        when(userRepository.findById(1L)).thenReturn(Optional.of(mockUser1));
+        when(userRepository.findById(1L)).thenReturn(Optional.of(tayJava));
 
         // Gọi hàm và kiểm tra kết quả
         UserResponse result = userService.findById(1L);
@@ -145,7 +145,7 @@ public class UserServiceTest {
 
     @Test
     void testFindByUsername_Success() {
-        when(userRepository.findByUsername("tayjava")).thenReturn(mockUser1);
+        when(userRepository.findByUsername("tayjava")).thenReturn(tayJava);
         UserResponse result = userService.findByUsername("tayjava");
         Assertions.assertNotNull(result);
         assertEquals("tayjava", result.getUsername());
@@ -153,7 +153,7 @@ public class UserServiceTest {
 
     @Test
     void testFindByEmail_Success() {
-        when(userRepository.findByEmail("quoctay87@gmail.com")).thenReturn(mockUser1);
+        when(userRepository.findByEmail("quoctay87@gmail.com")).thenReturn(tayJava);
         UserResponse result = userService.findByEmail("quoctay87@gmail.com");
         Assertions.assertNotNull(result);
         assertEquals("quoctay87@gmail.com", result.getEmail());
@@ -162,7 +162,7 @@ public class UserServiceTest {
     @Test
     void testSave_Success() {
         // Giả lập hành vi của UserRepository
-        when(userRepository.save(any(UserEntity.class))).thenReturn(mockUser1);
+        when(userRepository.save(any(UserEntity.class))).thenReturn(tayJava);
 
         UserCreationRequest userCreationRequest = new UserCreationRequest();
         userCreationRequest.setFirstName("Tay");
@@ -209,7 +209,7 @@ public class UserServiceTest {
         updatedUser.setStatus(UserStatus.ACTIVE);
 
         // Giả lập hành vi của UserRepository
-        when(userRepository.findById(userId)).thenReturn(Optional.of(mockUser2));
+        when(userRepository.findById(userId)).thenReturn(Optional.of(johnDoe));
         when(userRepository.save(any(UserEntity.class))).thenReturn(updatedUser);
 
         UserUpdateRequest updateRequest = new UserUpdateRequest();
@@ -252,15 +252,15 @@ public class UserServiceTest {
         request.setConfirmPassword("newPassword");
 
         // Giả lập hành vi của repository và password encoder
-        when(userRepository.findById(userId)).thenReturn(Optional.of(mockUser2));
+        when(userRepository.findById(userId)).thenReturn(Optional.of(johnDoe));
         when(passwordEncoder.encode(request.getPassword())).thenReturn("encodedNewPassword");
 
         // Gọi phương thức cần kiểm tra
         userService.changePassword(request);
 
         // Kiểm tra mật khẩu được mã hóa và lưu
-        assertEquals("encodedNewPassword", mockUser2.getPassword());
-        verify(userRepository, times(1)).save(mockUser2);
+        assertEquals("encodedNewPassword", johnDoe.getPassword());
+        verify(userRepository, times(1)).save(johnDoe);
         verify(passwordEncoder, times(1)).encode(request.getPassword());
     }
 
@@ -270,14 +270,14 @@ public class UserServiceTest {
         Long userId = 1L;
 
         // Giả lập hành vi repository
-        when(userRepository.findById(userId)).thenReturn(Optional.of(mockUser1));
+        when(userRepository.findById(userId)).thenReturn(Optional.of(tayJava));
 
         // Gọi phương thức cần kiểm tra
         userService.delete(userId);
 
         // Kiểm tra kết quả
-        assertEquals(UserStatus.INACTIVE, mockUser1.getStatus());
-        verify(userRepository, times(1)).save(mockUser1);
+        assertEquals(UserStatus.INACTIVE, tayJava.getStatus());
+        verify(userRepository, times(1)).save(tayJava);
     }
 
     @Test

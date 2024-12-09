@@ -140,10 +140,10 @@ public class UserServiceImpl implements UserService {
     public long save(UserCreationRequest req) {
         log.info("Saving user: {}", req);
 
-        UserEntity userByEmail = userRepository.findByEmail(req.getEmail());
-        if (userByEmail != null) {
-            throw new InvalidDataException("Email already exists");
-        }
+//        UserEntity userByEmail = userRepository.findByEmail(req.getEmail());
+//        if (userByEmail != null) {
+//            throw new InvalidDataException("Email already exists");
+//        }
 
         UserEntity user = new UserEntity();
         user.setFirstName(req.getFirstName());
@@ -159,32 +159,32 @@ public class UserServiceImpl implements UserService {
        UserEntity result = userRepository.save(user);
         log.info("Saved user: {}", user);
 
-        if (result.getId() != null) {
-            log.info("user id: {}", result.getId());
-            List<AddressEntity> addresses = new ArrayList<>();
-            req.getAddresses().forEach(address -> {
-                AddressEntity addressEntity = new AddressEntity();
-                addressEntity.setApartmentNumber(address.getApartmentNumber());
-                addressEntity.setFloor(address.getFloor());
-                addressEntity.setBuilding(address.getBuilding());
-                addressEntity.setStreetNumber(address.getStreetNumber());
-                addressEntity.setStreet(address.getStreet());
-                addressEntity.setCity(address.getCity());
-                addressEntity.setCountry(address.getCountry());
-                addressEntity.setAddressType(address.getAddressType());
-                addressEntity.setUserId(result.getId());
-                addresses.add(addressEntity);
-            });
-            addressRepository.saveAll(addresses);
-            log.info("Saved addresses: {}", addresses);
-        }
-
-        // Send email verification
-        try {
-            emailService.sendVerificationEmail(req.getEmail(), req.getUsername());
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+//        if (result.getId() != null) {
+//            log.info("user id: {}", result.getId());
+//            List<AddressEntity> addresses = new ArrayList<>();
+//            req.getAddresses().forEach(address -> {
+//                AddressEntity addressEntity = new AddressEntity();
+//                addressEntity.setApartmentNumber(address.getApartmentNumber());
+//                addressEntity.setFloor(address.getFloor());
+//                addressEntity.setBuilding(address.getBuilding());
+//                addressEntity.setStreetNumber(address.getStreetNumber());
+//                addressEntity.setStreet(address.getStreet());
+//                addressEntity.setCity(address.getCity());
+//                addressEntity.setCountry(address.getCountry());
+//                addressEntity.setAddressType(address.getAddressType());
+//                addressEntity.setUserId(result.getId());
+//                addresses.add(addressEntity);
+//            });
+//            addressRepository.saveAll(addresses);
+//            log.info("Saved addresses: {}", addresses);
+//        }
+//
+//        // Send email verification
+//        try {
+//            emailService.sendVerificationEmail(req.getEmail(), req.getUsername());
+//        } catch (IOException e) {
+//            throw new RuntimeException(e);
+//        }
 
         return result.getId();
     }

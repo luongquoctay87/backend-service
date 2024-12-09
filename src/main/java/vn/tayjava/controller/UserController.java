@@ -68,6 +68,7 @@ public class UserController {
     @Operation(summary = "Create User", description = "API add new user to database")
     @PostMapping("/add")
     @PreAuthorize("hasAuthority('admin')")
+    @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<Object> createUser(@RequestBody @Valid UserCreationRequest request) {
         log.info("Create User: {}", request);
 
