@@ -25,13 +25,13 @@ public class EmailService {
 
     private final SendGrid sendGrid;
 
-    @Value("${spring.sendGrid.fromEmail}")
+    @Value("${spring.sendGrid.fromEmail:dummy-from-email}")
     private String from;
 
-    @Value("${spring.sendGrid.templateId}")
+    @Value("${spring.sendGrid.templateId:dummy-template-id}")
     private String templateId;
 
-    @Value("${spring.sendGrid.verificationLink}")
+    @Value("${spring.sendGrid.verificationLink:dummy-verification-link}")
     private String verificationLink;
 
     /**

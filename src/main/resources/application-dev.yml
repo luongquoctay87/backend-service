@@ -16,10 +16,10 @@ spring:
     hibernate:
       ddl-auto: update
   sendGrid:
-    apiKey: ${SENDGRID_API_KEY}
-    fromEmail: quoctay87@gmail.com
-    templateId: d-2116466afd0a438b90615184dd569e42
-    verificationLink: http://localhost:8080/user/confirm-email
+    apiKey: ${SENDGRID_API_KEY:DUMMY-SENDGRID-API-KEY}
+    fromEmail: ${SENDGRID_FROM_EMAIL:quoctay87@gmail.com}
+    templateId: ${SENDGRID_TEMPLATE_ID:d-2116466afd0a438b90615184dd569e42}
+    verificationLink: ${SENDGRID_VERIFICATION_LINK:http://localhost:8080/user/confirm-email}
 
 # application-dev.yml
 springdoc:
@@ -30,14 +30,13 @@ springdoc:
 openapi:
   service:
     api-docs: backend-service
-    server: http://localhost:${server.port}
+    server: ${BACKEND_HOST:http://localhost:${server.port}}
     title: Backend service
     version: 1.0.0
 
-
 # Generate HMAC Authentication Code: https://www.devglan.com/online-tools/hmac-sha256-online
 jwt:
-  expiryMinutes: 60
-  expiryDay: 14
-  accessKey: IIwLeRIVsznVTPFEYmA6HiVVBrlKkKqC36OpWzqw8mk=
-  refreshKey: tvszknimPZQEdy3c9TCERBLAkOyoCc2ZvOmGcHsRJgg=
+  expiryMinutes: ${JWT_EXPIRY_MINUTES:60}
+  expiryDay: ${JWT_EXPIRY_DAY:14}
+  accessKey: ${JWT_ACCESS_KEY:IIwLeRIVsznVTPFEYmA6HiVVBrlKkKqC36OpWzqw8mk=}
+  refreshKey: ${JWT_REFRESH_KEY:tvszknimPZQEdy3c9TCERBLAkOyoCc2ZvOmGcHsRJgg=}

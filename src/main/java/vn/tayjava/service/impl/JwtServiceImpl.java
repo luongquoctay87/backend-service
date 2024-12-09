@@ -10,14 +10,16 @@ import io.jsonwebtoken.security.SignatureException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.access.AccessDeniedException;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Service;
 import vn.tayjava.common.TokenType;
 import vn.tayjava.exception.InvalidDataException;
 import vn.tayjava.service.JwtService;
 
 import java.security.Key;
-import java.util.*;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.function.Function;
 
 import static vn.tayjava.common.TokenType.ACCESS_TOKEN;
@@ -27,16 +29,16 @@ import static vn.tayjava.common.TokenType.REFRESH_TOKEN;
 @Slf4j(topic = "JWT-SERVICE")
 public class JwtServiceImpl implements JwtService {
 
-    @Value("${jwt.expiryMinutes}")
+    @Value("${jwt.expiryMinutes:60}")
     private long expiryMinutes;
 
-    @Value("${jwt.expiryDay}")
+    @Value("${jwt.expiryDay:14}")
     private long expiryDay;
 
-    @Value("${jwt.accessKey}")
+    @Value("${jwt.accessKey:dummy-access-key}")
     private String accessKey;
 
-    @Value("${jwt.refreshKey}")
+    @Value("${jwt.refreshKey:dummy-refresh-key}")
     private String refreshKey;
 
     @Override

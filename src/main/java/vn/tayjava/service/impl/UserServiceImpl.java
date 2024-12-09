@@ -72,7 +72,7 @@ public class UserServiceImpl implements UserService {
         Page<UserEntity> entityPage;
 
         if (StringUtils.hasLength(keyword)) {
-            keyword = "%" + keyword.toLowerCase() + "%";
+            keyword = "%" + keyword + "%";
             entityPage = userRepository.searchByKeyword(keyword, pageable);
         } else {
             entityPage = userRepository.findAll(pageable);
@@ -101,12 +101,38 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserResponse findByUsername(String username) {
-        return null;
+        log.info("Find user by username: {}", username);
+
+        UserEntity userEntity = userRepository.findByUsername(username);
+
+        return UserResponse.builder()
+                .id(userEntity.getId())
+                .firstName(userEntity.getFirstName())
+                .lastName(userEntity.getLastName())
+                .gender(userEntity.getGender())
+                .birthday(userEntity.getBirthday())
+                .username(userEntity.getUsername())
+                .phone(userEntity.getPhone())
+                .email(userEntity.getEmail())
+                .build();
     }
 
     @Override
     public UserResponse findByEmail(String email) {
-        return null;
+        log.info("Find user by email: {}", email);
+
+        UserEntity userEntity = userRepository.findByEmail(email);
+
+        return UserResponse.builder()
+                .id(userEntity.getId())
+                .firstName(userEntity.getFirstName())
+                .lastName(userEntity.getLastName())
+                .gender(userEntity.getGender())
+                .birthday(userEntity.getBirthday())
+                .username(userEntity.getUsername())
+                .phone(userEntity.getPhone())
+                .email(userEntity.getEmail())
+                .build();
     }
 
     @Override
@@ -130,11 +156,11 @@ public class UserServiceImpl implements UserService {
         user.setType(req.getType());
         user.setStatus(UserStatus.NONE);
 
-        userRepository.save(user);
+       UserEntity result = userRepository.save(user);
         log.info("Saved user: {}", user);
 
-        if (user.getId() != null) {
-            log.info("user id: {}", user.getId());
+        if (result.getId() != null) {
+            log.info("user id: {}", result.getId());
             List<AddressEntity> addresses = new ArrayList<>();
             req.getAddresses().forEach(address -> {
                 AddressEntity addressEntity = new AddressEntity();
@@ -146,7 +172,7 @@ public class UserServiceImpl implements UserService {
                 addressEntity.setCity(address.getCity());
                 addressEntity.setCountry(address.getCountry());
                 addressEntity.setAddressType(address.getAddressType());
-                addressEntity.setUserId(user.getId());
+                addressEntity.setUserId(result.getId());
                 addresses.add(addressEntity);
             });
             addressRepository.saveAll(addresses);
@@ -160,7 +186,7 @@ public class UserServiceImpl implements UserService {
             throw new RuntimeException(e);
         }
 
-        return user.getId();
+        return result.getId();
     }
 
     @Override
