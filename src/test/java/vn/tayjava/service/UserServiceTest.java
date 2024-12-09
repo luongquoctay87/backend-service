@@ -43,7 +43,7 @@ import static org.mockito.Mockito.*;
 @ExtendWith(MockitoExtension.class) // Sử dụng Mockito
 @MockitoSettings(strictness = Strictness.LENIENT)
 @Slf4j(topic = "UserServiceTest")
-public class UserServiceTest {
+class UserServiceTest {
 
     private UserService userService;
 
@@ -56,7 +56,7 @@ public class UserServiceTest {
     private static UserEntity johnDoe;
 
     @BeforeAll
-    public static void beforeAll() {
+     static void beforeAll() {
         // Dữ liệu giả lập
         tayJava = new UserEntity();
         tayJava.setId(1L);
@@ -86,13 +86,13 @@ public class UserServiceTest {
     }
 
     @BeforeEach
-    public void beforeEach() {
+     void beforeEach() {
         // Khởi tạo lớp triển khai của UserService
         userService = new UserServiceImpl(userRepository, addressRepository, passwordEncoder, emailService);
     }
 
     @Test
-    public void testGetUserList_Success() {
+     void testGetUserList_Success() {
         Page<UserEntity> userPage = new PageImpl<>(List.of(tayJava, johnDoe));
         when(userRepository.findAll(any(Pageable.class))).thenReturn(userPage);
 
@@ -103,7 +103,7 @@ public class UserServiceTest {
     }
 
     @Test
-    public void testSearchUser_Success() {
+     void testSearchUser_Success() {
         Page<UserEntity> userPage = new PageImpl<>(List.of(tayJava, johnDoe));
 
         // Giả lập phương thức search của UserRepository
@@ -117,7 +117,7 @@ public class UserServiceTest {
     }
 
     @Test
-    public void testGetUserList_Empty() {
+     void testGetUserList_Empty() {
         Page<UserEntity> userPage = new PageImpl<>(List.of());
         when(userRepository.findAll(any(Pageable.class))).thenReturn(userPage);
 
@@ -128,7 +128,7 @@ public class UserServiceTest {
     }
 
     @Test
-    public void testGetUserById_Success() {
+     void testGetUserById_Success() {
         when(userRepository.findById(1L)).thenReturn(Optional.of(tayJava));
 
         // Gọi hàm và kiểm tra kết quả
@@ -138,7 +138,7 @@ public class UserServiceTest {
     }
 
     @Test
-    public void testGetUserById_Failure() {
+     void testGetUserById_Failure() {
         ResourceNotFoundException thrown = assertThrows(ResourceNotFoundException.class, () -> userService.findById(10L));
         assertEquals("User not found", thrown.getMessage());
     }
@@ -265,7 +265,7 @@ public class UserServiceTest {
     }
 
     @Test
-    public void testDeleteUser_Success() {
+     void testDeleteUser_Success() {
         // Chuẩn bị dữ liệu
         Long userId = 1L;
 
@@ -281,7 +281,7 @@ public class UserServiceTest {
     }
 
     @Test
-    public void testUserNotFound_ThrowsException() {
+     void testUserNotFound_ThrowsException() {
         // Chuẩn bị dữ liệu
         Long userId = 1L;
 

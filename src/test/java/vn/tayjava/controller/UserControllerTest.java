@@ -86,7 +86,7 @@ class UserControllerTest {
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.status", is(200)))
-                .andExpect(jsonPath("$.message", is("user list")))
+                .andExpect(jsonPath("$.message", is("users")))
                 .andExpect(jsonPath("$.data.totalPages", is(1)))
                 .andExpect(jsonPath("$.data.totalElements", is(2)))
                 .andExpect(jsonPath("$.data.users[0].id", is(1)))

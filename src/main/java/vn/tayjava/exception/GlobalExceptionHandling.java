@@ -9,11 +9,9 @@ import lombok.Getter;
 import lombok.Setter;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.InternalAuthenticationServiceException;
-import org.springframework.web.ErrorResponse;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
 
@@ -23,7 +21,7 @@ import static org.springframework.http.HttpStatus.*;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
 @RestControllerAdvice
-public class GlobalException {
+public class GlobalExceptionHandling {
 
     /**
      * Handle exception when validate data
