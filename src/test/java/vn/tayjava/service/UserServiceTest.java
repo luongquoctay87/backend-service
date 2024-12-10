@@ -1,6 +1,5 @@
 package vn.tayjava.service;
 
-import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -8,8 +7,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.mockito.junit.jupiter.MockitoSettings;
-import org.mockito.quality.Strictness;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -39,10 +36,8 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
-// Unit Test cho Service Layer
+// Unit test cho service layer
 @ExtendWith(MockitoExtension.class) // Sử dụng Mockito
-@MockitoSettings(strictness = Strictness.LENIENT)
-@Slf4j(topic = "UserServiceTest")
 class UserServiceTest {
 
     private UserService userService;
@@ -56,7 +51,7 @@ class UserServiceTest {
     private static UserEntity johnDoe;
 
     @BeforeAll
-     static void beforeAll() {
+    static void beforeAll() {
         // Dữ liệu giả lập
         tayJava = new UserEntity();
         tayJava.setId(1L);
@@ -86,16 +81,18 @@ class UserServiceTest {
     }
 
     @BeforeEach
-     void beforeEach() {
+    void beforeEach() {
         // Khởi tạo lớp triển khai của UserService
         userService = new UserServiceImpl(userRepository, addressRepository, passwordEncoder, emailService);
     }
 
     @Test
-     void testGetUserList_Success() {
+    void testGetUserList_Success() {
+        // Giả lập phương thức search của UserRepository
         Page<UserEntity> userPage = new PageImpl<>(List.of(tayJava, johnDoe));
         when(userRepository.findAll(any(Pageable.class))).thenReturn(userPage);
 
+        // Gọi phương thức cần kiểm tra
         UserPageResponse result = userService.findAll(null, null, 0, 20);
 
         Assertions.assertNotNull(result);
@@ -103,12 +100,12 @@ class UserServiceTest {
     }
 
     @Test
-     void testSearchUser_Success() {
-        Page<UserEntity> userPage = new PageImpl<>(List.of(tayJava, johnDoe));
-
+    void testSearchUser_Success() {
         // Giả lập phương thức search của UserRepository
+        Page<UserEntity> userPage = new PageImpl<>(List.of(tayJava, johnDoe));
         when(userRepository.searchByKeyword(any(), any(Pageable.class))).thenReturn(userPage);
 
+        // Gọi phương thức cần kiểm tra
         UserPageResponse result = userService.findAll("tay", null, 0, 20);
 
         Assertions.assertNotNull(result);
@@ -117,10 +114,12 @@ class UserServiceTest {
     }
 
     @Test
-     void testGetUserList_Empty() {
+    void testGetUserList_Empty() {
+        // Giả lập hành vi của UserRepository
         Page<UserEntity> userPage = new PageImpl<>(List.of());
         when(userRepository.findAll(any(Pageable.class))).thenReturn(userPage);
 
+        // Gọi phương thức cần kiểm tra
         UserPageResponse result = userService.findAll(null, null, 0, 20);
 
         Assertions.assertNotNull(result);
@@ -128,33 +127,43 @@ class UserServiceTest {
     }
 
     @Test
-     void testGetUserById_Success() {
+    void testGetUserById_Success() {
+        // Giả lập hành vi của UserRepository
         when(userRepository.findById(1L)).thenReturn(Optional.of(tayJava));
 
-        // Gọi hàm và kiểm tra kết quả
+        // Gọi phương thức cần kiểm tra
         UserResponse result = userService.findById(1L);
+
         Assertions.assertNotNull(result);
         assertEquals("tayjava", result.getUsername());
     }
 
     @Test
-     void testGetUserById_Failure() {
+    void testGetUserById_Failure() {
         ResourceNotFoundException thrown = assertThrows(ResourceNotFoundException.class, () -> userService.findById(10L));
         assertEquals("User not found", thrown.getMessage());
     }
 
     @Test
     void testFindByUsername_Success() {
+        // Giả lập hành vi của UserRepository
         when(userRepository.findByUsername("tayjava")).thenReturn(tayJava);
+
+        // Gọi phương thức cần kiểm tra
         UserResponse result = userService.findByUsername("tayjava");
+
         Assertions.assertNotNull(result);
         assertEquals("tayjava", result.getUsername());
     }
 
     @Test
     void testFindByEmail_Success() {
+        // Giả lập hành vi của UserRepository
         when(userRepository.findByEmail("quoctay87@gmail.com")).thenReturn(tayJava);
+
+        // Gọi phương thức cần kiểm tra
         UserResponse result = userService.findByEmail("quoctay87@gmail.com");
+
         Assertions.assertNotNull(result);
         assertEquals("quoctay87@gmail.com", result.getEmail());
     }
@@ -265,7 +274,7 @@ class UserServiceTest {
     }
 
     @Test
-     void testDeleteUser_Success() {
+    void testDeleteUser_Success() {
         // Chuẩn bị dữ liệu
         Long userId = 1L;
 
@@ -281,7 +290,7 @@ class UserServiceTest {
     }
 
     @Test
-     void testUserNotFound_ThrowsException() {
+    void testUserNotFound_ThrowsException() {
         // Chuẩn bị dữ liệu
         Long userId = 1L;
 
