@@ -1,21 +1,21 @@
 services:
-  mysql:
-    image: mysql:8.0
-    container_name: mysql
-    cap_add:
-      - SYS_NICE
-    restart: always
-    environment:
-      - MYSQL_DATABASE=testdb
-      - MYSQL_ROOT_PASSWORD=password
-    ports:
-      - '3306:3306'
-    volumes:
-      - mysql_data:/var/lib/mysql
-      - ./initdb.sql:/docker-entrypoint-initdb.d/initdb.sql
-    networks:
-      - default
-
+#  mysql:
+#    image: mysql:8.0
+#    container_name: mysql
+#    cap_add:
+#      - SYS_NICE
+#    restart: always
+#    environment:
+#      - MYSQL_DATABASE=testdb
+#      - MYSQL_ROOT_PASSWORD=password
+#    ports:
+#      - '3306:3306'
+#    volumes:
+#      - mysql_data:/var/lib/mysql
+#      - ./initdb.sql:/docker-entrypoint-initdb.d/initdb.sql
+#    networks:
+#      - default
+#
   postgres:
     image: postgres
     container_name: postgres
@@ -28,7 +28,7 @@ services:
       - postgres:/data/postgres
       - ./initdb.sql:/docker-entrypoint-initdb.d/init.sql
     ports:
-      - '5439:5432'
+      - '5431:5432'
     networks:
       - default
 
@@ -39,6 +39,50 @@ services:
       dockerfile: Dockerfile
     ports:
       - "8080:8080"
+    environment:
+      DATABASE_HOST: host.docker.internal
+      DATABASE_PORT: 5431
+      DATABASE_USERNAME: postgres
+      DATABASE_PASSWORD: password
+      LOGSTASH_HOST: host.docker.internal:5600
+    networks:
+      - default
+
+  elastic-search:
+    image: elasticsearch:7.14.1
+    container_name: elasticsearch
+    restart: always
+    ports:
+      - "9200:9200"
+    environment:
+      - discovery.type=single-node
+    networks:
+      - default
+
+  kibana:
+    image: kibana:7.14.1
+    container_name: kibana
+    restart: always
+    ports:
+      - "5601:5601"
+    environment:
+      - ELASTICSEARCH_HOSTS=http://elastic-search:9200
+    networks:
+      - default
+
+  logstash:
+    image: logstash:7.14.1
+    container_name: logstash
+    restart: always
+    ports:
+      - "5600:5600" # Socket port
+      - "5044:5044"
+    #      - "9600:9600"
+    volumes:
+      - ./logstash.conf:/usr/share/logstash/pipeline/logstash.conf
+    environment:
+      - XPACK_MONITORING_ELASTICSEARCH_HOSTS=http://elastic-search:9200
+      - XPACK_MONITORING_ENABLED=true
     networks:
       - default
 
@@ -47,4 +91,5 @@ networks:
     name: backend-service
 
 volumes:
-  mysql_data:
+  postgres:
+#  mysql_data:
