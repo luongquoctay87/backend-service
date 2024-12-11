@@ -96,7 +96,7 @@ class UserServiceTest {
         UserPageResponse result = userService.findAll(null, null, 0, 20);
 
         Assertions.assertNotNull(result);
-        assertEquals(2, result.totalElements);
+        assertEquals(2, result.getTotalElements());
     }
 
     @Test
@@ -109,7 +109,7 @@ class UserServiceTest {
         UserPageResponse result = userService.findAll("tay", null, 0, 20);
 
         Assertions.assertNotNull(result);
-        assertEquals(2, result.totalElements);
+        assertEquals(2, result.getTotalElements());
         assertEquals("tayjava", result.getUsers().get(0).getUsername());
     }
 
