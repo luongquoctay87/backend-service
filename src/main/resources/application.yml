@@ -7,11 +7,29 @@ spring:
   profiles:
     active: @spring.profiles.active@
 
-management:
+management: # cho phép hiển thị thông tin sức khoẻ của service
   endpoints:
     web:
       exposure:
         include: '*'
+  endpoint:
+    health:
+      probes:
+        enabled: true
+  health:
+    livenessState:
+      enabled: true
+    readinessState:
+      enabled: true
+    circuitbreakers:
+      enabled: true
+    ratelimiters:
+      enabled: true
+  prometheus:
+    metrics:
+      export:
+        step: 5s
+        enabled: true
 
 logging:
   level:

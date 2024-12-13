@@ -5,15 +5,15 @@ metadata:
 spec:
   selector:
     matchLabels:
-      app: backends
+      app: backend
   template:
     metadata:
       labels:
-        app: backends
+        app: backend
     spec:
       containers:
-        - name: backends
-          image: backend:1.0
+        - name: backend
+          image: luongquoctay87/backend-service:init
           imagePullPolicy: Never
           resources:
             requests:
@@ -30,7 +30,7 @@ metadata:
 spec:
   type: ClusterIP
   selector:
-    app: backends
+    app: backend
   ports:
     - name: http
       protocol: "TCP"
