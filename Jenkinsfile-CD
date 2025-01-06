@@ -1,0 +1,43 @@
+pipeline{
+    agent any
+    environment {
+        APP_NAME = "auth-service"
+    }
+    stages {
+        stage ('Clean workspace') {
+            steps {
+                cleanWs()
+            }
+        }
+
+        stage("Checkout from SCM"){
+            steps {
+                git branch: 'master', credentialsId: 'GitHub', url: 'https://github.com/luongquoctay87/gitops-cicd'
+            }
+        }
+
+        stage("Update the deployment tag"){
+            steps {
+                sh """
+                    cat auth.yml
+                    sed -i'' -e 's/${APP_NAME}:.*/${APP_NAME}:${IMAGE_TAG}/g' auth.yml
+                    cat auth.yml
+                """
+            }
+        }
+
+        stage("Push the changed deployment file to git"){
+            steps {
+                sh """
+                    git config --global user.name 'luongquoctay87'
+                    git config --global user.email 'luongquoctay87@gmail.com'
+                    git add auth.yml
+                    git commit -m 'Update deployment image tag ${APP_NAME}:${IMAGE_TAG}'
+                """
+                withCredentials([gitUsernamePassword(credentialsId: 'GitHub', gitToolName: 'Default')]) {
+                    sh 'git push https://github.com/luongquoctay87/gitops-cicd master'
+                }
+            }
+        }
+    }
+}
