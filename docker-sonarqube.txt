@@ -7,3 +7,10 @@ docker run -d --name sonarqube \
     -v sonarqube_extensions:/opt/sonarqube/extensions \
     -v sonarqube_logs:/opt/sonarqube/logs \
     sonarqube:community
+
+
+<key>EnvironmentVariables</key>
+<dict>
+    <key>PATH</key>
+    <string>/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/Applications/Docker.app/Contents/Resources/bin/:/Users/quoctay/Library/Group\ Containers/group.com.docker/Applications/Docker.app/Contents/Resources/bin</string>
+</dict>
