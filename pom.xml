@@ -18,7 +18,16 @@
 		<license/>
 	</licenses>
 	<developers>
-		<developer/>
+		<developer>
+			<id>tay-java</id>
+			<name>Luong Quoc Tay</name>
+			<organization>Tay Java</organization>
+			<organizationUrl>https://tayjava.vn</organizationUrl>
+			<email>quoctay87@gmail.com</email>
+			<roles>
+				<role>Instructor</role>
+			</roles>
+		</developer>
 	</developers>
 	<scm>
 		<connection/>
