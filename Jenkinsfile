@@ -15,7 +15,7 @@ pipeline {
 
         stage("Checkout from SCM"){
             steps {
-              git branch: 'ci-cd-pipeline', credentialsId: 'github', url: 'git@github.com:luongquoctay87/backend-service'
+              git branch: 'ci-cd-pipeline', credentialsId: 'GitHub', url: 'git@github.com:luongquoctay87/backend-service'
             }
         }
 
